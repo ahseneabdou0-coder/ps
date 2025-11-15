@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget,
-    QLabel, QPushButton, QScrollArea
+    QLabel, QPushButton, QScrollArea, QMessageBox
 )
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -94,7 +94,12 @@ class MapApp(QMainWindow):
                         lat, lon = map(float, coords)
                         points.append((time, lat, lon, file))
 
-        if not points:
+        if len(points) < 3:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("Error")
+            msg.setText("Cannot draw the path. At least 3 photos must contain both GPS and time data.")
+            msg.exec_()
             return
 
         points.sort(key=lambda x: x[0])
